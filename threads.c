@@ -21,11 +21,11 @@ int define_num_type(int num) {
         }
     }
     if(div_sum==num) {
-        return 1; // Número perfeito
+        return 1; 
     } else if(div_sum>num) {
-        return 2; // Número abundante
+        return 2; 
     } else if(div_sum<num) {
-        return 3; // Número defectivo
+        return 3; 
     }
     return 0;
 }
@@ -49,7 +49,7 @@ double sequencial(int worksize) {
     }
     clock_gettime(CLOCK_MONOTONIC_RAW, &end);
     printf("----------------------------------------------\n");
-    printf("* Sequencial\t[P]\t[A]\t[D]\t[WTot]\t\n");
+    printf("* Sequential\t[P]\t[A]\t[D]\t[WTot]\t\n");
     printf("\t\t%d\t%d\t%d\t%d\t\n",p_count,a_count,d_count,worksize);
     return diffTimeSec(start, end);
 }
@@ -58,7 +58,7 @@ void * chunk_thread(void *args) {
     int type;
     int f_num = *(actual_args->f_num);
     int l_num = *(actual_args->l_num);
-    int *v_types = malloc (sizeof (int) * 4); // [0] - Número de perfeitos / [1] - Número de abundantes / [2] - Número de defectivos / [3] - Total da thread
+    int *v_types = malloc (sizeof (int) * 4); 
     v_types[0] = 0;
     v_types[1] = 0;
     v_types[2] = 0;
@@ -142,7 +142,7 @@ void * esparsa_thread(void *args) {
     int f_num = *(actual_args->f_num);
     int l_num = *(actual_args->l_num);
     int jump_len = *(actual_args->jump_len);
-    int *v_types = malloc (sizeof (int) * 3); // [0] - Número de perfeitos / [1] - Número de abundantes / [2] - Número de defectivos / [3] - Total da thread
+    int *v_types = malloc (sizeof (int) * 3); 
     v_types[0] = 0;
     v_types[1] = 0;
     v_types[2] = 0;
@@ -173,7 +173,7 @@ double esparsa(int worksize, int num_thr) {
     int *start_vect;
     start_vect = (int*)malloc(num_thr * sizeof(int));
     printf("----------------------------------------------\n");
-    printf("* Esparsa \t[P]\t[A]\t[D]\t[WTh]\n");
+    printf("* Sparse \t[P]\t[A]\t[D]\t[WTh]\n");
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     for(int i=0;i<num_thr;i++) {
         start_vect[i]=i+1;
@@ -210,19 +210,19 @@ int main(int argc, char **argv) {
         num_thr = abs(strtol(argv[1], NULL, 10));
         worksize = abs(strtol(argv[2], NULL, 10));
     } else if(argc > 1 && strtol(argv[1], NULL, 10)==0) {
-        printf("O numero de threads deve ser maior que 0.\n");
+        printf("The number of threads must be greater than 0.\n");
         exit(0);
     }
     else {
-        printf("O numero de threads e o tamanho do worksize devem ser passados por parâmetro na execução do código.\n");
-        printf("Ex.: ./main 4 100\n");
+        printf("The number of threads and the worksize must be passed as arguments.\n");
+        printf("Ex.: ./<file-name> 4 100\n");
         exit(0);
     }
     seq_time = sequencial(worksize);
     chunk_time = chunk(worksize, num_thr);
     esp_time = esparsa(worksize, num_thr);
 
-    printf("Tempo da busca sequencial:  %lfs\n",seq_time);
-    printf("Tempo da busca com threads: %lfs (distribuicao por chunk)\n",chunk_time);
-    printf("Tempo da busca com threads: %lfs (distribuicao esparsa)\n",esp_time);
+    printf("Sequential time:  %lfs\n",seq_time);
+    printf("Using threads time: %lfs (chunk distribution)\n",chunk_time);
+    printf("Using threads time: %lfs (sparse distribution)\n",esp_time);
 }
